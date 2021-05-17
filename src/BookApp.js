@@ -77,10 +77,10 @@ const BookApp = (props) => {
 
   return (
     <div>
+      <BookShelf title={"Currently Reading"} books={currentlyReading} />
+      <BookShelf title={"Want to Read"} books={wantToRead} />
+      <BookShelf title={"Read"} books={read} />
       <div className="open-search">
-        <BookShelf title={"Currently Reading"} books={currentlyReading} />
-        <BookShelf title={"Want to Read"} books={wantToRead} />
-        <BookShelf title={"Read"} books={read} />
         <Link to="/search">Add a Book</Link>
         <div></div>
       </div>
