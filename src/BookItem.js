@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
+import ShelfChanger from "./ShelfChanger";
 
 const BookItem = (props) => {
 
-    const [book, setBook] = useState();
-
-    useEffect(() => {
-        setBook(props);
-    })
-
+  const handleShelfChangeAction = (e) => {
+    props.handleShelfChangeAction(e, props.book);
+  };
 
   return (
     <div className="book">
@@ -20,17 +18,7 @@ const BookItem = (props) => {
             backgroundImage: 'url("")',
           }}
         ></div>
-        <div className="book-shelf-changer">
-          <select>
-            <option value="move" disabled>
-              Move to...
-            </option>
-            <option value="currentlyReading">Currently Reading</option>
-            <option value="wantToRead">Want to Read</option>
-            <option value="read">Read</option>
-            <option value="none">None</option>
-          </select>
-        </div>
+        <ShelfChanger action={handleShelfChangeAction} />
       </div>
       <div className="book-title">{props.book.title}</div>
       <div className="book-authors">{props.book.authors}</div>
