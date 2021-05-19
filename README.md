@@ -1,3 +1,13 @@
+# Description
+
+This project, is a simple book tracking app. The user can search for books and categorize them based on whether he is currently reading them, intends to read them or has already read them. The project has been made with React and calls on a back-end application provided by Udacity.
+
+# How to start the project
+
+To start the project
+
+- Execute npm install, to download all the necessary libraries
+- Execute npm start, to start the project at localhost:3000
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
