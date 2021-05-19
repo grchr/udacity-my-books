@@ -172,6 +172,8 @@ function App() {
           setSearchResults(finalResult);
         }
       }).catch((error) => {
+        console.log(error.message);
+        setSearchResults([]);
       });
     }
   };
