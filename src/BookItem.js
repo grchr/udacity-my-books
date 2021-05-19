@@ -3,6 +3,7 @@ import ShelfChanger from "./ShelfChanger";
 
 const BookItem = (props) => {
 
+
   const handleShelfChangeAction = (e) => {
     props.handleShelfChangeAction(e, props.book);
   };
@@ -18,10 +19,10 @@ const BookItem = (props) => {
             backgroundImage: `url("${props.book.imageLinks.smallThumbnail}")`,
           }}
         ></div>
-        <ShelfChanger action={handleShelfChangeAction} />
+        <ShelfChanger action={handleShelfChangeAction} defaultShelf={props.book.shelf ? props.book.shelf : 'none'}/>
       </div>
       <div className="book-title">{props.book.title}</div>
-      <div className="book-authors">{props.book.authors}</div>
+      <div className="book-authors">{props.book.authors.join(', ')}</div>
     </div>
   );
 };

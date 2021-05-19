@@ -3,14 +3,8 @@ import { Link } from "react-router-dom";
 import BookShelf from "./BookShelf";
 
 const BookApp = (props) => {
-  const [wantToRead, setWantToRead] = useState([]);
-  const [read, setRead] = useState([]);
-  const [currentlyReading, setCurrentlyReading] = useState([]);
 
   useEffect(() => {
-    setWantToRead(props.wantToRead);
-    setCurrentlyReading(props.currentlyReading);
-    setRead(props.read);
   }, []);
 
 
@@ -20,9 +14,9 @@ const BookApp = (props) => {
 
   return (
     <div>
-      <BookShelf title={"Currently Reading"} books={currentlyReading} handleShelfChangeAction={handleShelfChangeAction}/>
-      <BookShelf title={"Want to Read"} books={wantToRead} handleShelfChangeAction={handleShelfChangeAction}/>
-      <BookShelf title={"Read"} books={read} handleShelfChangeAction={handleShelfChangeAction}/>
+      <BookShelf title={"Currently Reading"} books={props.currentlyReading} handleShelfChangeAction={handleShelfChangeAction}/>
+      <BookShelf title={"Want to Read"} books={props.wantToRead} handleShelfChangeAction={handleShelfChangeAction}/>
+      <BookShelf title={"Read"} books={props.read} handleShelfChangeAction={handleShelfChangeAction}/>
       <div className="open-search">
         <Link to="/search">Add a Book</Link>
         <div></div>

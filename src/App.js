@@ -23,7 +23,6 @@ function App() {
   const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
-    console.log("init");
     loadInitialData();
   }, []);
 
@@ -68,9 +67,6 @@ function App() {
             console.log("No shelf found for: " + book.id + ": " + book.title);
         }
       });
-      console.log(tempWTR);
-      console.log(tempCR);
-      console.log(tempR);
       setWantToRead(tempWTR);
       setWantToReadMap(tempWTRMap);
       setCurrentlyReading(tempCR);
@@ -91,12 +87,15 @@ function App() {
       tempMapR.delete(book.id);
       switch (value) {
         case "wantToRead":
+          book.shelf = 'wantToRead';
           tempMapWTR.set(book.id, book);
           break;
         case "currentlyReading":
+          book.shelf = 'currentlyReading'
           tempMapCR.set(book.id, book);
           break;
         case "read":
+          book.shelf = 'read';
           tempMapR.set(book.id, book);
           break;
         default:      
@@ -123,6 +122,9 @@ function App() {
         }
       });
 
+      console.log(tempWTR);
+      console.log(tempCR);
+      console.log(tempR);
       setWantToRead(tempWTR);
       setCurrentlyReading(tempCR);
       setRead(tempR);
