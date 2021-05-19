@@ -68,7 +68,9 @@ function App() {
             console.log("No shelf found for: " + book.id + ": " + book.title);
         }
       });
-
+      console.log(tempWTR);
+      console.log(tempCR);
+      console.log(tempR);
       setWantToRead(tempWTR);
       setWantToReadMap(tempWTRMap);
       setCurrentlyReading(tempCR);
@@ -79,75 +81,55 @@ function App() {
   };
 
   const handleShelfChangeAction = (value, book) => {
-    BooksAPI.update(book, value)
-      .then((response) => {
-        //first remove the item from any existing shelves
-        if (wantToReadMap.has(book.id)) {
-          let tempMap = new Map([...wantToReadMap]);
-          tempMap.delete(book.id);
-          setWantToReadMap(tempMap);
-          let array = [...wantToRead];
-          let index = array.indexOf(book);
-          if (index != -1) {
-            array.splice(index, 1);
-            setWantToRead(array);
-          }
+    BooksAPI.update(book, value).then((response) => {
+      //clear and update cache maps
+      let tempMapWTR = new Map([...wantToReadMap]);
+      tempMapWTR.delete(book.id);
+      let tempMapCR = new Map([...currentlyReadingMap]);
+      tempMapCR.delete(book.id);
+      let tempMapR = new Map([...readMap]);
+      tempMapR.delete(book.id);
+      switch (value) {
+        case "wantToRead":
+          tempMapWTR.set(book.id, book);
+          break;
+        case "currentlyReading":
+          tempMapCR.set(book.id, book);
+          break;
+        case "read":
+          tempMapR.set(book.id, book);
+          break;
+        default:      
+      }
+      //re initialize shelf arrays and add objects from cache
+      let tempWTR = [];
+      response.wantToRead.forEach(id => {
+        if (tempMapWTR.has(id)) {
+          tempWTR.push(tempMapWTR.get(id))
         }
-        if (currentlyReadingMap.has(book.id)) {
-          let tempMap = new Map([...currentlyReadingMap]);
-          tempMap.delete(book.id);
-          setCurrentlyReadingMap(tempMap);
-          let array = [...currentlyReading];
-          let index = array.indexOf(book);
-          if (index !== -1) {
-            array.splice(index, 1);
-            setCurrentlyReading(array);
-          }
+      });
+
+      let tempCR = [];
+      response.currentlyReading.forEach(id => {
+        if (tempMapCR.has(id)) {
+          tempCR.push(tempMapCR.get(id))
         }
-        if (readMap.has(book.id)) {
-          let tempMap = new Map([...readMap]);
-          tempMap.delete(book.id);
-          setReadMap(tempMap);
-          let array = [...read];
-          let index = array.indexOf(book);
-          if (index != -1) {
-            array.splice(index, 1);
-            setRead(array);
-          }
+      });
+
+      let tempR = [];
+      response.read.forEach(id => {
+        if (tempMapR.has(id)) {
+          tempR.push(tempMapR.get(id))
         }
-        // now add the item to its new shelf
-        switch (value) {
-          case "wantToRead":
-            console.log("wantToRead");
-            let tempMapWTR = new Map([...wantToReadMap]);
-            tempMapWTR.set(book.id, book);
-            setWantToReadMap(tempMapWTR);
-            setWantToRead((oldWantToRead) => [...oldWantToRead, book]);
-            break;
-          case "currentlyReading":
-            console.log("currentlyReading");
-            let tempMapCR = new Map([...currentlyReadingMap]);
-            tempMapCR.set(book.id, book);
-            setCurrentlyReadingMap(tempMapCR);
-            setCurrentlyReading((oldCurrentlyReading) => [
-              ...oldCurrentlyReading,
-              book,
-            ]);
-            break;
-          case "read":
-            console.log("read");
-            let tempMapR = new Map([...readMap]);
-            tempMapR.set(book.id, book);
-            setReadMap(tempMapR);
-            setRead((oldRead) => [...oldRead, book]);
-            break;
-          case "none":
-            //do nothing. just delete the item from every shelf
-            break;
-          default:
-        }
-      })
-      .catch((error) => {
+      });
+
+      setWantToRead(tempWTR);
+      setCurrentlyReading(tempCR);
+      setRead(tempR);
+      setWantToReadMap(tempMapWTR);
+      setCurrentlyReadingMap(tempMapCR);
+      setReadMap(tempMapR);
+    }).catch((error) => {
         alert(error.message);
       });
   };

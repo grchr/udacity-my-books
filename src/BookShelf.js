@@ -6,8 +6,6 @@ const BookShelf = (props) => {
 
   useEffect(() => {
     setBooks(props.books);
-    console.log("BookShelf");
-    console.log(props.books);
   }, [props.books]);
 
   const handleShelfChangeAction = (value, book) => {

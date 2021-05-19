@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import BookShelf from './BookShelf';
-import * as BooksAPI from "./BooksAPI";
 
 const SearchPage = (props) => {
 
   useEffect(() => {
-    console.log("init search");
   }, [])
 
   const handleShelfChangeAction = (value, book) => {
