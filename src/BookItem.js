@@ -15,7 +15,7 @@ const BookItem = (props) => {
           style={{
             width: 128,
             height: 193,
-            backgroundImage: 'url("")',
+            backgroundImage: `url("${props.book.imageLinks.smallThumbnail}")`,
           }}
         ></div>
         <ShelfChanger action={handleShelfChangeAction} />

@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import BookShelf from './BookShelf';
+import * as BooksAPI from "./BooksAPI";
 
 const SearchPage = (props) => {
 
+  useEffect(() => {
+    console.log("init search");
+  }, [])
+
   const handleShelfChangeAction = (value, book) => {
-    props.handleSearchShelfChangeAction(value, book);
+    props.handleShelfChangeAction(value, book);
+  }
+
+  const searchBooks = (e) => {
+    props.searchAction(e);
   }
 
   return (
@@ -13,13 +22,13 @@ const SearchPage = (props) => {
       <div className="search-books-bar">
         <Link className="close-search" to='/'>Close</Link>
         <div className="search-books-input-wrapper">
-          <input type="text" placeholder="Search by title or author" onChange={(e) => {
-            props.handleSearchShelfChangeAction(e);
+          <input type="text" placeholder="Search by title or author" value={props.searchValue} onChange={(e) => {
+            searchBooks(e.target.value);
           }}/>
 
         </div>
       </div>
-      <BookShelf title={"Search Results"} books={props.searchResults} handleShelfChangeAction={handleShelfChangeAction}/>
+      {props.searchResults.length === 0 ? <></>:<BookShelf title={"Search Results"} books={props.searchResults} handleShelfChangeAction={handleShelfChangeAction}/>}
     </div>
   )
 }

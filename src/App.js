@@ -18,7 +18,12 @@ function App() {
   const [readMap, setReadMap] = useState(new Map());
   const [currentlyReadingMap, setCurrentlyReadingMap] = useState(new Map());
 
+  //Search Page props
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+
   useEffect(() => {
+    console.log("init");
     loadInitialData();
   }, []);
 
@@ -74,82 +79,101 @@ function App() {
   };
 
   const handleShelfChangeAction = (value, book) => {
-    console.log("handleShelfChangeAction");
-    console.log(value);
-    console.log(book);
-    BooksAPI.update(book, value).then((response) => {
-      console.log("in promise");
-      console.log(response);
-      //first remove the item from any existing shelves
-      if (wantToReadMap.has(book.id)) {
-        let tempMap = new Map([...wantToReadMap]);
-        tempMap.delete(book.id);
-        setWantToReadMap(tempMap);
-        let array = [...wantToRead];
-        let index = array.indexOf(book);
-        if (index != -1) {
-          array.splice(index, 1);
-          setWantToRead(array);
+    BooksAPI.update(book, value)
+      .then((response) => {
+        //first remove the item from any existing shelves
+        if (wantToReadMap.has(book.id)) {
+          let tempMap = new Map([...wantToReadMap]);
+          tempMap.delete(book.id);
+          setWantToReadMap(tempMap);
+          let array = [...wantToRead];
+          let index = array.indexOf(book);
+          if (index != -1) {
+            array.splice(index, 1);
+            setWantToRead(array);
+          }
         }
-      }
-      if (currentlyReadingMap.has(book.id)) {
-        let tempMap = new Map([...currentlyReadingMap]);
-        tempMap.delete(book.id);
-        setCurrentlyReadingMap(tempMap);
-        let array = [...currentlyReading];
-        let index = array.indexOf(book);
-        if (index !== -1) {
-          array.splice(index, 1);
-          setCurrentlyReading(array);
+        if (currentlyReadingMap.has(book.id)) {
+          let tempMap = new Map([...currentlyReadingMap]);
+          tempMap.delete(book.id);
+          setCurrentlyReadingMap(tempMap);
+          let array = [...currentlyReading];
+          let index = array.indexOf(book);
+          if (index !== -1) {
+            array.splice(index, 1);
+            setCurrentlyReading(array);
+          }
         }
-      }
-      if (readMap.has(book.id)) {
-        let tempMap = new Map([...readMap]);
-        tempMap.delete(book.id);
-        setReadMap(tempMap);
-        let array = [...read];
-        let index = array.indexOf(book);
-        if (index != -1) {
-          array.splice(index, 1);
-          setRead(array);
+        if (readMap.has(book.id)) {
+          let tempMap = new Map([...readMap]);
+          tempMap.delete(book.id);
+          setReadMap(tempMap);
+          let array = [...read];
+          let index = array.indexOf(book);
+          if (index != -1) {
+            array.splice(index, 1);
+            setRead(array);
+          }
         }
-      }
-      // now add the item to its new shelf
-      switch (value) {
-        case "wantToRead":
-          console.log("wantToRead");
-          let tempMapWTR = new Map([...wantToReadMap]);
-          tempMapWTR.set(book.id, book);
-          setWantToReadMap(tempMapWTR);
-          setWantToRead((oldWantToRead) => [...oldWantToRead, book]);
-          break;
-        case "currentlyReading":
-          console.log("currentlyReading");
-          let tempMapCR = new Map([...currentlyReadingMap]);
-          tempMapCR.set(book.id, book);
-          setCurrentlyReadingMap(tempMapCR);
-          setCurrentlyReading((oldCurrentlyReading) => [
-            ...oldCurrentlyReading,
-            book,
-          ]);
-          break;
-        case "read":
-          console.log("read");
-          let tempMapR = new Map([...readMap]);
-          tempMapR.set(book.id, book);
-          setReadMap(tempMapR);
-          setRead((oldRead) => [...oldRead, book]);
-          break;
-        case "none":
-          //do nothing. just delete the item from every shelf
-          break;
-        default:
-      }
-    }).catch(error => {alert(error.message)});
+        // now add the item to its new shelf
+        switch (value) {
+          case "wantToRead":
+            console.log("wantToRead");
+            let tempMapWTR = new Map([...wantToReadMap]);
+            tempMapWTR.set(book.id, book);
+            setWantToReadMap(tempMapWTR);
+            setWantToRead((oldWantToRead) => [...oldWantToRead, book]);
+            break;
+          case "currentlyReading":
+            console.log("currentlyReading");
+            let tempMapCR = new Map([...currentlyReadingMap]);
+            tempMapCR.set(book.id, book);
+            setCurrentlyReadingMap(tempMapCR);
+            setCurrentlyReading((oldCurrentlyReading) => [
+              ...oldCurrentlyReading,
+              book,
+            ]);
+            break;
+          case "read":
+            console.log("read");
+            let tempMapR = new Map([...readMap]);
+            tempMapR.set(book.id, book);
+            setReadMap(tempMapR);
+            setRead((oldRead) => [...oldRead, book]);
+            break;
+          case "none":
+            //do nothing. just delete the item from every shelf
+            break;
+          default:
+        }
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
   };
 
-  const handleSearchShelfChangeAction = (value) => {
-    console.log(value);
+  const searchAction = (e) => {
+    if (!e) {
+      setSearchValue("");
+      setSearchResults([]);
+    } else {
+      setSearchValue(e);
+      BooksAPI.search(e).then((result) => {
+        if (result) {
+          const finalResult = result.filter((book) => {
+            return (
+              book.authors !== undefined &&
+              book.authors.length !== 0 &&
+              book.title !== undefined &&
+              book.imageLinks !== undefined &&
+              book.imageLinks.smallThumbnail !== undefined
+            );
+          });
+          setSearchResults(finalResult);
+        }
+      }).catch((error) => {
+      });
+    }
   };
 
   return (
@@ -176,7 +200,10 @@ function App() {
               path="/search"
               component={() => (
                 <SearchPage
-                  handleSearchShelfChangeAction={handleSearchShelfChangeAction}
+                  handleShelfChangeAction={handleShelfChangeAction}
+                  searchResults={searchResults}
+                  searchAction={searchAction}
+                  searchValue={searchValue}
                 />
               )}
             />
