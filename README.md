@@ -6,8 +6,8 @@ This project, is a simple book tracking app. The user can search for books and c
 
 To start the project
 
-- Execute ### `npm start`, to download all the necessary libraries
-- Execute ### `npm start`, to launch the project at [http://localhost:3000](http://localhost:3000)
+- Execute `npm start`, to download all the necessary libraries
+- Execute `npm start`, to launch the project at [http://localhost:3000](http://localhost:3000)
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
