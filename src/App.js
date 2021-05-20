@@ -77,61 +77,63 @@ function App() {
   };
 
   const handleShelfChangeAction = (value, book) => {
-    BooksAPI.update(book, value).then((response) => {
-      //clear and update cache maps
-      let tempMapWTR = new Map([...wantToReadMap]);
-      tempMapWTR.delete(book.id);
-      let tempMapCR = new Map([...currentlyReadingMap]);
-      tempMapCR.delete(book.id);
-      let tempMapR = new Map([...readMap]);
-      tempMapR.delete(book.id);
-      switch (value) {
-        case "wantToRead":
-          book.shelf = 'wantToRead';
-          tempMapWTR.set(book.id, book);
-          break;
-        case "currentlyReading":
-          book.shelf = 'currentlyReading'
-          tempMapCR.set(book.id, book);
-          break;
-        case "read":
-          book.shelf = 'read';
-          tempMapR.set(book.id, book);
-          break;
-        default:      
-      }
-      //re initialize shelf arrays and add objects from cache
-      let tempWTR = [];
-      response.wantToRead.forEach(id => {
-        if (tempMapWTR.has(id)) {
-          tempWTR.push(tempMapWTR.get(id))
+    BooksAPI.update(book, value)
+      .then((response) => {
+        //clear and update cache maps
+        let tempMapWTR = new Map([...wantToReadMap]);
+        tempMapWTR.delete(book.id);
+        let tempMapCR = new Map([...currentlyReadingMap]);
+        tempMapCR.delete(book.id);
+        let tempMapR = new Map([...readMap]);
+        tempMapR.delete(book.id);
+        switch (value) {
+          case "wantToRead":
+            book.shelf = "wantToRead";
+            tempMapWTR.set(book.id, book);
+            break;
+          case "currentlyReading":
+            book.shelf = "currentlyReading";
+            tempMapCR.set(book.id, book);
+            break;
+          case "read":
+            book.shelf = "read";
+            tempMapR.set(book.id, book);
+            break;
+          default:
         }
-      });
+        //re initialize shelf arrays and add objects from cache
+        let tempWTR = [];
+        response.wantToRead.forEach((id) => {
+          if (tempMapWTR.has(id)) {
+            tempWTR.push(tempMapWTR.get(id));
+          }
+        });
 
-      let tempCR = [];
-      response.currentlyReading.forEach(id => {
-        if (tempMapCR.has(id)) {
-          tempCR.push(tempMapCR.get(id))
-        }
-      });
+        let tempCR = [];
+        response.currentlyReading.forEach((id) => {
+          if (tempMapCR.has(id)) {
+            tempCR.push(tempMapCR.get(id));
+          }
+        });
 
-      let tempR = [];
-      response.read.forEach(id => {
-        if (tempMapR.has(id)) {
-          tempR.push(tempMapR.get(id))
-        }
-      });
+        let tempR = [];
+        response.read.forEach((id) => {
+          if (tempMapR.has(id)) {
+            tempR.push(tempMapR.get(id));
+          }
+        });
 
-      console.log(tempWTR);
-      console.log(tempCR);
-      console.log(tempR);
-      setWantToRead(tempWTR);
-      setCurrentlyReading(tempCR);
-      setRead(tempR);
-      setWantToReadMap(tempMapWTR);
-      setCurrentlyReadingMap(tempMapCR);
-      setReadMap(tempMapR);
-    }).catch((error) => {
+        console.log(tempWTR);
+        console.log(tempCR);
+        console.log(tempR);
+        setWantToRead(tempWTR);
+        setCurrentlyReading(tempCR);
+        setRead(tempR);
+        setWantToReadMap(tempMapWTR);
+        setCurrentlyReadingMap(tempMapCR);
+        setReadMap(tempMapR);
+      })
+      .catch((error) => {
         alert(error.message);
       });
   };
@@ -142,23 +144,25 @@ function App() {
       setSearchResults([]);
     } else {
       setSearchValue(e);
-      BooksAPI.search(e).then((result) => {
-        if (result) {
-          const finalResult = result.filter((book) => {
-            return (
-              book.authors !== undefined &&
-              book.authors.length !== 0 &&
-              book.title !== undefined &&
-              book.imageLinks !== undefined &&
-              book.imageLinks.smallThumbnail !== undefined
-            );
-          });
-          setSearchResults(finalResult);
-        }
-      }).catch((error) => {
-        console.log(error.message);
-        setSearchResults([]);
-      });
+      BooksAPI.search(e)
+        .then((result) => {
+          if (result) {
+            const finalResult = result.filter((book) => {
+              return (
+                book.authors !== undefined &&
+                book.authors.length !== 0 &&
+                book.title !== undefined &&
+                book.imageLinks !== undefined &&
+                book.imageLinks.smallThumbnail !== undefined
+              );
+            });
+            setSearchResults(finalResult);
+          }
+        })
+        .catch((error) => {
+          console.log(error.message);
+          setSearchResults([]);
+        });
     }
   };
 
@@ -179,6 +183,9 @@ function App() {
                   read={read}
                   currentlyReading={currentlyReading}
                   handleShelfChangeAction={handleShelfChangeAction}
+                  wantToReadMap={wantToReadMap}
+                  currentlyReadingMap={currentlyReadingMap}
+                  readMap={readMap}
                 />
               )}
             />
@@ -190,6 +197,9 @@ function App() {
                   searchResults={searchResults}
                   searchAction={searchAction}
                   searchValue={searchValue}
+                  wantToReadMap={wantToReadMap}
+                  currentlyReadingMap={currentlyReadingMap}
+                  readMap={readMap}
                 />
               )}
             />

@@ -10,7 +10,7 @@ const BookShelf = (props) => {
 
   const handleShelfChangeAction = (value, book) => {
     props.handleShelfChangeAction(value, book);
-  }
+  };
 
   return (
     <div className="list-books-content">
@@ -22,7 +22,13 @@ const BookShelf = (props) => {
               {books.map((book) => {
                 return (
                   <li key={book.id}>
-                    <BookItem book={book} handleShelfChangeAction={handleShelfChangeAction}/>
+                    <BookItem
+                      book={book}
+                      handleShelfChangeAction={handleShelfChangeAction}
+                      wantToReadMap={props.wantToReadMap}
+                      currentlyReadingMap={props.currentlyReadingMap}
+                      readMap={props.readMap}
+                    />
                   </li>
                 );
               })}
