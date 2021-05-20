@@ -1,6 +1,6 @@
 # Description
 
-This project, is a simple book tracking app. The user can search for books and categorize them based on whether he is currently reading them, intends to read them or has already read them. The project has been made with React and calls on a back-end application provided by Udacity.
+This project, is a simple book tracking app. The users can search for books and categorize them based on whether they are currently reading them, intend to read them or have already read them. The project has been made with React and calls on a back-end application provided by Udacity.
 
 # How to start the project
 
